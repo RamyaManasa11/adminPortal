@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import MiniDrawer from "../components/SideBar";
-import { Box, Container
+import { Box, Container, Typography
 } from '@mui/material';
 
 const Home = () => {
@@ -18,7 +18,9 @@ const Home = () => {
           <MiniDrawer/>
           
           <Container fixed>        
-            <h1 style={{alignItems:"center"}}>Hi Admin, Welcome Back !!!!</h1>                
+            <Typography textAlign={"center"}>
+                <h1>Hi Admin, Welcome Back !!!!</h1>
+            </Typography>               
             </Container>
         </Box>
         </>

@@ -19,6 +19,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import data from '../data';
 import '../App.css'
+import { Button, Grid } from '@mui/material';
+import { useEffect } from 'react';
 
 
 const drawerWidth = 240;
@@ -49,7 +51,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -95,6 +96,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [logout, setLogout] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation()
 
@@ -109,9 +111,18 @@ export default function MiniDrawer() {
     navigate(url.path)
   }
 
+  const logoutHandler = (event:any) => {
+    event.preventDefault();
+    localStorage.removeItem("UserName");
+    setLogout(true);
+  }
+
+  useEffect(() => {
+    if (!localStorage.getItem("UserName")) navigate("/login");
+  }, [logout]);
+
   const dataRes = data();
 
-  
   return (
     <Box className='wrapper'>
       <CssBaseline />
@@ -129,9 +140,17 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Admin Portal
-          </Typography>
+          <Grid container direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" noWrap component="div">
+              Admin Portal
+            </Typography>
+            <Button 
+              sx={{color:"black",backgroundColor:"floralwhite", '&:hover':{backgroundColor:'yellow'}}} 
+              onClick={logoutHandler}
+            >
+              Log Out
+            </Button>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open} >
@@ -163,14 +182,12 @@ export default function MiniDrawer() {
                   onClick={()=>tabClickEvent(text, index)}
                   style={{color: text.path === location.pathname ? "#000" : "#fff" }}
                 >
-                  {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                   {text.img}
                 </ListItemIcon>
                 <ListItemText
                     onClick={()=>tabClickEvent(text, index)}
                  primary={text.label} sx={{ opacity: open ? 1 : 0 }}
                  style={{color: text.path === location.pathname ? "#000" : "#fff" }} 
-                 
                  />
               </ListItemButton>
             </ListItem>

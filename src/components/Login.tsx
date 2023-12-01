@@ -44,12 +44,12 @@ export default function Login() {
             let password = data.get('password');
             if ((email !== 'admin1@gmail.com' || password !== 'Password@1') && (email !== 'admin2@gmail.com' || password !== 'Password@2'))
                 toast.error('please Enter valid credentials');;
-            if (email === 'admin1@gmail.com' || password === 'Password@1') {
+            if (email === 'admin1@gmail.com' && password === 'Password@1') {
                 history('/');
                 toast.success("login success");
                 localStorage.setItem("UserName", 'admin1@gmail.com')
             }
-            if (email === 'admin2@gmail.com' || password === 'Password@2') {
+            if (email === 'admin2@gmail.com' && password === 'Password@2') {
                 history('/');
                 localStorage.setItem("UserName", 'admin2@gmail.com')
             }

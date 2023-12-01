@@ -47,3 +47,25 @@
   .wrapper button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium {
     color: #fff;
   }
+
+  .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-12.MuiGrid-grid-lg-12.css-1idn90j-MuiGrid-root{
+    padding-top: 15px;
+  }
+
+  .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-12.MuiGrid-grid-lg-12.css-1idn90j-MuiGrid-root{
+    padding-left: 35px;
+    padding-right: 15px;
+  }
+
+  button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-edgeEnd.MuiIconButton-sizeMedium.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root{
+    color: dodgerblue;
+  }
+
+  li.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.css-1rki8sg-MuiListItem-root{
+    padding-right: 200px;
+  }
+
+  span.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary.css-10hburv-MuiTypography-root{
+    
+    font-weight: 550;
+  }
