@@ -29,7 +29,9 @@ const Campaign=()=>{
     const navigate = useNavigate();
 
     const handleCardClick = (address:any) =>{
-        navigate(`/update-campaign?path=${address}`)
+        navigate(
+            `/create-campaign?path=${address}`
+          );
     }
 
     const getStartDate = (startTime:any) =>{

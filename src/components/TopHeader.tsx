@@ -2,10 +2,10 @@ import { Box, Button, Menu, Typography } from "@mui/material";
 import { LoyaltyListingHeaderContainer } from "./Topheader.style";
 import { useNavigate } from "react-router";
 
-const TopHeader = (props:any) => {
-//   const navigate = useNavigate();
+const TopHeader = (props: any) => {
+  const navigate = useNavigate();
   const handleAddNew = () => {
-    // navigate('/create-campaign');
+    navigate('/create-campaign');
   };
   return (
     <LoyaltyListingHeaderContainer>
