@@ -7,8 +7,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Controller, useFormContext } from "react-hook-form";
 import dayjs from "dayjs";
 
+interface props {
+  createType: string;
+}
 
-const CampaignDateTime = () => {
+const DateTime = ({ createType }: props) => {
 
   const { control } = useFormContext();
 
@@ -33,7 +36,7 @@ const CampaignDateTime = () => {
         >
           <TitleSubTitle
             title={`${('Start Date & Time')}`}
-            subTitle={`${('Please choose the start date and time of the Campaign')}`}
+            subTitle={`${('Please choose the start date and time of the ' + createType)}`}
           />
         </Grid>
         <Grid
@@ -48,6 +51,9 @@ const CampaignDateTime = () => {
               <Controller
                 control={control}
                 name="startTime"
+                rules={{
+                  required: true,
+                }}
                 render={({ field }) => {
                   return (
                     <DateTimePicker
@@ -80,7 +86,7 @@ const CampaignDateTime = () => {
         >
           <TitleSubTitle
             title={`${('End Date & Time')}`}
-            subTitle={`${('Please choose the end date and time of the Campaign')}`}
+            subTitle={`${('Please choose the end date and time of the ' + createType)}`}
           />
         </Grid>
         <Grid
@@ -96,6 +102,9 @@ const CampaignDateTime = () => {
               <Controller
                 control={control}
                 name="endTime"
+                rules={{
+                  required: true,
+                }}
                 render={({ field }) => {
                   return (
                     <DateTimePicker
@@ -113,4 +122,4 @@ const CampaignDateTime = () => {
     </Box>
   )
 }
-export default CampaignDateTime;
+export default DateTime;

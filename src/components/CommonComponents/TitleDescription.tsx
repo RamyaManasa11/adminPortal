@@ -2,7 +2,11 @@ import { TextField, Box, Grid } from "@mui/material"
 import { Controller, useFormContext } from "react-hook-form"
 import TitleSubTitle from "../TitleSubtitle";
 
-const CampaignTitleDescription = () => {
+interface props{
+    createType: string;
+}
+
+const TitleDescription = ({createType}: props) => {
     const { control, formState: { errors } } = useFormContext();
     return (
         <Box>
@@ -25,7 +29,7 @@ const CampaignTitleDescription = () => {
                 >
                     <TitleSubTitle
                         title={`${('title')}*`}
-                        subTitle={"This will be your campaign Title"}
+                        subTitle={"This will be title of your "+createType}
                     />
                 </Grid>
                 <Grid
@@ -73,7 +77,7 @@ const CampaignTitleDescription = () => {
                 >
                     <TitleSubTitle
                         title={`${('Description')}*`}
-                        subTitle={'Provide a brief overview of your campaign'}
+                        subTitle={'Provide a brief overview of your '+createType}
                     />
                 </Grid>
                 <Grid
@@ -121,7 +125,7 @@ const CampaignTitleDescription = () => {
                 >
                     <TitleSubTitle
                         title={`${('short Description')}*`}
-                        subTitle={('Provide a short overview of your campaign')}
+                        subTitle={('Provide a short overview of your '+createType)}
                     />
                 </Grid>
                 <Grid
@@ -157,4 +161,4 @@ const CampaignTitleDescription = () => {
     )
 }
 
-export default CampaignTitleDescription;
+export default TitleDescription;

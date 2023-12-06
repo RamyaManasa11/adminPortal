@@ -5,7 +5,7 @@ import Login from './components/Login';
 import Home from './screens/Home';
 import Campaign from './screens/Campaign';
 import Reward from './screens/Reward';
-import CreateCampaign from './screens/CreateCampaign';
+import CreateCampaignReward from './screens/CreateCampaignReward';
 
 function App() {
   return (
@@ -16,7 +16,8 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/campaign' element={<Campaign />} />
         <Route path='/reward' element={<Reward />} />
-        <Route path='/create-campaign' element={<CreateCampaign/>} />
+        <Route path='/create-campaign' element={<CreateCampaignReward/>} />
+        <Route path='/create-reward' element={<CreateCampaignReward/>} />
       </Routes>
       </div>
       );

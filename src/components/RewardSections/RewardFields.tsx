@@ -1,98 +1,99 @@
 import { Box, Stepper, Step, StepLabel, Button, Typography, Grid } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
-import loyaltyCampaignApi from '../../API/campaign/loyalty.campaign.api';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router";
 import { useForm, FormProvider } from 'react-hook-form';
-import CampaignPointStructure from './CampaignPointStructure';
-import { CampaignInstance } from './CampaignInstance';
 import { toast } from 'react-toastify';
+import loyaltyRewardApi from '../../API/reward/loyalty.reward.api';
+import { RewardInstance } from './RewardInstance';
+import RewardPointStructure from './RewardPointStructure';
 import TitleDescription from '../CommonComponents/TitleDescription';
 import DateTime from '../CommonComponents/DateTime';
 import CampaignRewardTypes from '../CommonComponents/CampaignRewardTypes';
 
 function getSteps() {
     return [
-        "Choose Campaign Type",
+        "Choose Reward Type",
         "Title & Description",
         "Point Structure",
         "Date & Time"
     ];
 }
 
-const CampaignFields = () => {
+const RewardFields = () => {
     const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(0);
-    const [selectedCampaignType, setSelectedCampaignType] = useState("");
+    const [selectedRewardType, setSelectedRewardType] = useState("");
     const [types, setTypes] = useState([]);
     const steps = getSteps();
-    const [campaignStatus, setCampaignStatus] = useState(false);
-    const [campaignInstance, setCampaignInstance] = useState<any>({});
-    const getCampaignTypes = async () => {
-        const listRes: any = await loyaltyCampaignApi.getCampainTypes();
-        setTypes(listRes?.campaignTypes);
-        setSelectedCampaignType(listRes?.campaignTypes[0]);
+    const [rewardStatus, setRewardStatus] = useState(false);
+    const [rewardInstance, setRewardInstance] = useState<any>({});
+
+    const getRewardTypes = async () => {
+        const listRes: any = await loyaltyRewardApi.getRewardTypes();
+        setTypes(listRes?.rewardTypes);
+        setSelectedRewardType(listRes?.rewardTypes[0]);
     }
 
     useEffect(() => {
-        if (Object.keys(campaignInstance).length === 0) {
-            const newCampaign = CampaignInstance();
-            setCampaignInstance(newCampaign);
+        if (Object.keys(rewardInstance).length === 0) {
+            const newReward = RewardInstance();
+            setRewardInstance(newReward);
         }
-        getCampaignTypes();
+        getRewardTypes();
     }, []);
 
-    const handleCampaignType = (type: React.SetStateAction<string>) => {
-        setSelectedCampaignType(type);
+    const handleRewardType = (type: React.SetStateAction<string>) => {
+        setSelectedRewardType(type);
     };
 
-    const goToCampList = () => {
-        navigate('/campaign');
+    const goToRewardList = () => {
+        navigate('/reward');
     };
 
     function getStepContent(step: number) {
         switch (step) {
             case 0:
-                return <CampaignRewardTypes createType={"campaign"} types={types} selectedType={selectedCampaignType} handleType={handleCampaignType} />;
+                return <CampaignRewardTypes createType={"reward"} types={types} selectedType={selectedRewardType} handleType={handleRewardType} />;
             case 1:
-                return <TitleDescription createType={"campaign"}/>;
+                return <TitleDescription createType={"reward"}/>;
             case 2:
-                return <CampaignPointStructure selectedCampaignType={selectedCampaignType} />;
+                return <RewardPointStructure selectedRewardType={selectedRewardType} />;
             case 3:
-                return <DateTime createType={"campaign"}/>;
+                return <DateTime createType={"reward"}/>;
             default:
                 return ""
         }
     }
 
     const methods = useForm({
-        defaultValues: campaignInstance
+        defaultValues: rewardInstance
     });
 
-    const createCampaign = async (campDetails: any) => {
-        let campaignRequest = {
-            ...campDetails,
-            startTime: campDetails.startTime / 1000,
-            endTime: campDetails.endTime / 1000,
-            maxPoints: parseInt(campDetails.maxPoints),
-            earnPoints: parseInt(campDetails.earnPoints),
-            amountSpent: parseInt(campDetails.amountSpent)
+    const createReward = async (rewardDetails: any) => {
+        let rewardRequest = {
+            ...rewardDetails,
+            startTime: rewardDetails.startTime / 1000,
+            endTime: rewardDetails.endTime / 1000,
+            maxRedeemPoints: parseInt(rewardDetails.maxRedeemPoints),
+            discount: parseInt(rewardDetails.discount),
+            pointSpent: parseInt(rewardDetails.pointSpent)
         }
-        return loyaltyCampaignApi.createCampaign({
-            payload: campaignRequest,
+        return loyaltyRewardApi.createReward({
+            payload: rewardRequest,
         });
     }
 
     const handleNext = async (data: any) => {
         if (activeStep === steps.length - 1) {
             try {
-                let campDetails = {
+                let rewardDetails = {
                     ...data,
-                    //campaignType: (selectedCampaignType==="Point for purchase" ? true : false)
+                    rewardType: (selectedRewardType==="Token Conversion" ? false : true)
                 }
-                const detailsRes: any = await createCampaign(campDetails);;
-                if (detailsRes?.message === 'Campaign created') {
-                    setCampaignStatus(true);
-                    toast.success("Campaign created successfully");
+                const detailsRes: any = await createReward(rewardDetails);;
+                if (detailsRes?.message === 'Reward created') {
+                    setRewardStatus(true);
+                    toast.success("Reward created successfully");
                 }
             } catch (err: any) {
                 toast.error("Error:", err);
@@ -118,13 +119,13 @@ const CampaignFields = () => {
                     );
                 })}
             </Stepper>
-            {activeStep === steps.length && campaignStatus ? (
+            {activeStep === steps.length && rewardStatus ? (
                 <Grid component={Box}>
                     <Typography variant="h3" align="center">
-                        Campaign got Created
+                        Reward got Created
                     </Typography>
-                    <Button onClick={goToCampList}>
-                        Go to campaign Listing
+                    <Button onClick={goToRewardList}>
+                        Go to reward Listing
                     </Button>
                 </Grid>
             ) : (
@@ -152,4 +153,4 @@ const CampaignFields = () => {
         </Box>
     );
 };
-export default CampaignFields;
+export default RewardFields;

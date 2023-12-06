@@ -3,10 +3,10 @@ import TitleSubTitle from "../TitleSubtitle"
 import { Controller, useFormContext } from "react-hook-form"
 
 interface props {
-  selectedCampaignType: string
+  selectedRewardType: string
 }
 
-const CampaignPointStructure = ({ selectedCampaignType }: props) => {
+const RewardPointStructure = ({ selectedRewardType }: props) => {
   const { control, formState: { errors } } = useFormContext();
   return (
     <>
@@ -28,8 +28,8 @@ const CampaignPointStructure = ({ selectedCampaignType }: props) => {
           }}
         >
           <TitleSubTitle
-            title={`${('earn points')}*`}
-            subTitle={"Enter the number of points"}
+            title={(selectedRewardType==="Token Conversion")?`${('token value')}*`:`${('discount value')}*`}
+            subTitle={(selectedRewardType==="Token Conversion")?"Enter the token value":"This will be the your discount value"}
           />
         </Grid>
         <Grid
@@ -41,24 +41,23 @@ const CampaignPointStructure = ({ selectedCampaignType }: props) => {
         >
           <Controller
             control={control}
-            name="earnPoints"
+            name="discount"
             rules={{
               required: true,
             }}
             render={({ field }) => (
               <TextField
-                id="earnPoints"
-                placeholder='Enter earnPoints'
+                id="discount"
+                placeholder={(selectedRewardType==="Token Conversion")?'Please add token value here':"Please add discount value here"}
                 fullWidth
                 {...field}
-                error={errors.earnPoints ? true : false}
-                helperText={!errors.earnPoints ? "" : "EarnPoints is required"}
+                error={errors.discount ? true : false}
+                helperText={!errors.discount ? "" : "value is required"}
               />
 
             )}
           />
         </Grid>
-        {(selectedCampaignType === "Point for purchase") ?
           <Grid container rowSpacing={1}>
             <Grid
               item
@@ -78,8 +77,8 @@ const CampaignPointStructure = ({ selectedCampaignType }: props) => {
               }}
             >
               <TitleSubTitle
-                title={`${('amount Spent')}*`}
-                subTitle={'Enter the amount(for Ex: $20)'}
+                title={`${('Spend Points')}*`}
+                subTitle={'Enter the number of points'}
               />
             </Grid>
             <Grid
@@ -91,19 +90,19 @@ const CampaignPointStructure = ({ selectedCampaignType }: props) => {
             >
               <Controller
                 control={control}
-                name="amountSpent"
+                name="pointSpent"
                 rules={{
                   required: true,
                 }}
                 render={({ field }) => (
                   <TextField
-                    id="amountSpent,"
-                    placeholder='Enter amount spent,'
+                    id="pointSpent,"
+                    placeholder='Please add points here,'
                     fullWidth
                     margin="normal"
                     {...field}
-                    error={errors.amountSpent ? true : false}
-                    helperText={!errors.amountSpent ? "" : "AmountSpent is required"}
+                    error={errors.pointSpent ? true : false}
+                    helperText={!errors.pointSpent ? "" : "AmountSpent is required"}
                   />
                 )}
               />
@@ -126,8 +125,8 @@ const CampaignPointStructure = ({ selectedCampaignType }: props) => {
               }}
             >
               <TitleSubTitle
-                title={`${('Maximum Point A Customer Can Earn For Each Order')}*`}
-                subTitle={('Enter the number that a customer can earn from a single order')}
+                title={`${('Redeem Counts')}*`}
+                subTitle={('Choose the number of redeem')}
               />
             </Grid>
             <Grid
@@ -139,28 +138,27 @@ const CampaignPointStructure = ({ selectedCampaignType }: props) => {
             >
               <Controller
                 control={control}
-                name="maxPoints"
+                name="maxRedeemPoints"
                 rules={{
                   required: true,
                 }}
                 render={({ field }) => (
                   <TextField
-                    id="maxPoints"
-                    placeholder='Enter maxPoints'
+                    id="maxRedeemPoints"
+                    placeholder='Unlimited is optional'
                     fullWidth
                     margin="normal"
                     {...field}
-                    error={errors.maxPoints ? true : false}
-                    helperText={!errors.maxPoints ? "" : "MaxPoints is required"}
+                    error={errors.maxRedeemPoints ? true : false}
+                    helperText={!errors.maxRedeemPoints ? "" : "Redeem counts is required"}
                   />
                 )}
               />
             </Grid>
-          </Grid> :
-          <Grid></Grid>}
+          </Grid>
       </Grid>
     </>
   )
 }
 
-export default CampaignPointStructure
+export default RewardPointStructure
