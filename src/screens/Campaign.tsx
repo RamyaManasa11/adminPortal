@@ -1,5 +1,5 @@
 import MiniDrawer from '../components/SideBar';
-import { Box, Container, Grid, Card, ListItem, ListItemText, IconButton, Typography, SvgIcon, } from '@mui/material';
+import { Box, Container, Grid, Card, ListItem, ListItemText, IconButton, Typography, SvgIcon, Skeleton, } from '@mui/material';
 import TopHeader from "../components/TopHeader";
 import { useEffect, useState } from 'react';
 import loyaltyCampaignApi from '../API/campaign/loyalty.campaign.api';
@@ -9,8 +9,10 @@ import { useNavigate } from 'react-router';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import '../App.css';
 import { format } from 'date-fns';
+import { Dialog } from '@mui/material';
+import DialogBox from '../components/CommonComponents/DialogBox';
 
-const useStyles = makeStyles ({
+const useStyles = makeStyles({
     card: {
         border: "1px solid cornflowerblue"
     }
@@ -27,11 +29,17 @@ const Campaign = () => {
     const [list, setList] = useState<List[]>([]);
     const classes = useStyles();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const [add, setadd] = useState("");
 
-    const handleCardClick = (address: any) => {
-        navigate(
-            `/create-campaign?path=${address}`
-        );
+    const handleOpen = (address: any) => {
+        setOpen(true);
+        setadd(address)
+    }
+
+    const handleClose = () => {
+        getList();
+        setOpen(false);
     }
 
     const getStartDate = (startTime: any) => {
@@ -43,15 +51,19 @@ const Campaign = () => {
     }
 
     const getList = async () => {
-        const listRes: any = await loyaltyCampaignApi.getCampainList();
-        setList((listRes.result).reverse());
+        try {
+            const listRes: any = await loyaltyCampaignApi.getCampainList();
+            setList((listRes.result).reverse());
+        }
+        catch (err: any) {
+            console.log(err);
+        }
     };
 
     useEffect(() => {
         getList();
     }, []);
 
-    
     const handleAddNew = () => {
         navigate('/create-campaign');
     };
@@ -65,9 +77,9 @@ const Campaign = () => {
                         handleAddNew={handleAddNew}
                     />
                     <Grid container spacing={2}>
-                        {list.map(item => (
-                            <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <Card variant='elevation' classes={{ root: classes.card }} onClick={() => handleCardClick(item.contractAddress)}>
+                        {list.map((item, index) => (
+                            <Grid item xs={12} sm={12} md={12} lg={12} key={index}>
+                                <Card variant='elevation' classes={{ root: classes.card }} onClick={() => handleOpen(item.contractAddress)}>
                                     <ListItem
                                         secondaryAction={
                                             <IconButton edge="end" aria-label="update">
@@ -92,9 +104,23 @@ const Campaign = () => {
                                             </Typography>
                                         </Box>
                                     </ListItem>
+
                                 </Card>
                             </Grid>
                         ))}
+                        <Dialog onClose={handleClose}
+                            aria-labelledby="customized-dialog-title"
+                            open={open}
+                            PaperProps={{
+                                style: {
+                                    boxShadow: 'none',
+                                    width: '100%',
+                                    height: 'auto'
+                                },
+                            }}
+                        >
+                            <DialogBox address={add} handleClose={handleClose} />
+                        </Dialog>
                     </Grid>
                 </Container>
             </Box>

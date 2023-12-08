@@ -66,5 +66,19 @@ const loyaltyCampaignApi = {
             return err;
         }
     },
+    updateCampaign: (payload: any) => {
+        console.log(payload, "ActivePayload")
+        try {
+            const res = axios.put(process.env.REACT_APP_LOYALTY_API+'v1/campaign/updateCampaign', payload)
+                .then(response => {
+                    console.log("Status: ", response.status);
+                    console.log("Data: ", response.data);
+                    return response.data;
+                })
+            return res;
+        } catch (err: any) {
+            return err;
+        }
+    }
 }
 export default loyaltyCampaignApi;

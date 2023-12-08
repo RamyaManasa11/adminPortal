@@ -2,13 +2,13 @@ import { Box, Stepper, Step, StepLabel, Button, Typography, Grid } from '@mui/ma
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router";
 import { useForm, FormProvider } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import loyaltyRewardApi from '../../API/reward/loyalty.reward.api';
 import { RewardInstance } from './RewardInstance';
 import RewardPointStructure from './RewardPointStructure';
 import TitleDescription from '../CommonComponents/TitleDescription';
 import DateTime from '../CommonComponents/DateTime';
 import CampaignRewardTypes from '../CommonComponents/CampaignRewardTypes';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 function getSteps() {
     return [
@@ -55,11 +55,11 @@ const RewardFields = () => {
             case 0:
                 return <CampaignRewardTypes createType={"reward"} types={types} selectedType={selectedRewardType} handleType={handleRewardType} />;
             case 1:
-                return <TitleDescription createType={"reward"}/>;
+                return <TitleDescription createType={"reward"} />;
             case 2:
                 return <RewardPointStructure selectedRewardType={selectedRewardType} />;
             case 3:
-                return <DateTime createType={"reward"}/>;
+                return <DateTime createType={"reward"} />;
             default:
                 return ""
         }
@@ -83,20 +83,45 @@ const RewardFields = () => {
         });
     }
 
+    const onSuccess = () => {
+        Swal.fire({
+            title: "Success",
+            text: "You have successfully created a new Reward",
+            icon: 'success',
+            confirmButtonColor: 'green'
+        } as SweetAlertOptions).then(function () {
+            navigate('/reward');
+        })
+    }
+    const onError = (error: any) => {
+        console.log(error);
+        Swal.fire({
+            title: "Error",
+            text: error,
+            icon: 'error',
+            confirmButtonColor: '#d33'
+        } as SweetAlertOptions).then(function () {
+            navigate('/reward')
+        })
+    }
+
     const handleNext = async (data: any) => {
         if (activeStep === steps.length - 1) {
             try {
                 let rewardDetails = {
                     ...data,
-                    rewardType: (selectedRewardType==="Token Conversion" ? false : true)
+                    rewardType: (selectedRewardType === "Token Conversion" ? false : true)
                 }
                 const detailsRes: any = await createReward(rewardDetails);;
                 if (detailsRes?.message === 'Reward created') {
                     setRewardStatus(true);
-                    toast.success("Reward created successfully");
+                }
+                else {
+                    setRewardStatus(false);
+                    onError(detailsRes?.message);
                 }
             } catch (err: any) {
-                toast.error("Error:", err);
+                console.log(err);
             }
         };
         setActiveStep(activeStep + 1);
@@ -122,11 +147,8 @@ const RewardFields = () => {
             {activeStep === steps.length && rewardStatus ? (
                 <Grid component={Box}>
                     <Typography variant="h3" align="center">
-                        Reward got Created
+                        {onSuccess()}
                     </Typography>
-                    <Button onClick={goToRewardList}>
-                        Go to reward Listing
-                    </Button>
                 </Grid>
             ) : (
                 <>

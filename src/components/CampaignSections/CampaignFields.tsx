@@ -5,10 +5,10 @@ import { useNavigate } from "react-router";
 import { useForm, FormProvider } from 'react-hook-form';
 import CampaignPointStructure from './CampaignPointStructure';
 import { CampaignInstance } from './CampaignInstance';
-import { toast } from 'react-toastify';
 import TitleDescription from '../CommonComponents/TitleDescription';
 import DateTime from '../CommonComponents/DateTime';
 import CampaignRewardTypes from '../CommonComponents/CampaignRewardTypes';
+import Swal, {SweetAlertOptions} from 'sweetalert2';
 
 function getSteps() {
     return [
@@ -27,6 +27,7 @@ const CampaignFields = () => {
     const steps = getSteps();
     const [campaignStatus, setCampaignStatus] = useState(false);
     const [campaignInstance, setCampaignInstance] = useState<any>({});
+
     const getCampaignTypes = async () => {
         const listRes: any = await loyaltyCampaignApi.getCampainTypes();
         setTypes(listRes?.campaignTypes);
@@ -43,10 +44,6 @@ const CampaignFields = () => {
 
     const handleCampaignType = (type: React.SetStateAction<string>) => {
         setSelectedCampaignType(type);
-    };
-
-    const goToCampList = () => {
-        navigate('/campaign');
     };
 
     function getStepContent(step: number) {
@@ -87,18 +84,42 @@ const CampaignFields = () => {
             try {
                 let campDetails = {
                     ...data,
-                    //campaignType: (selectedCampaignType==="Point for purchase" ? true : false)
                 }
-                const detailsRes: any = await createCampaign(campDetails);;
+                const detailsRes: any = await createCampaign(campDetails);
                 if (detailsRes?.message === 'Campaign created') {
                     setCampaignStatus(true);
-                    toast.success("Campaign created successfully");
+                }
+                else{
+                    setCampaignStatus(false);
+                    onError(detailsRes?.message)
                 }
             } catch (err: any) {
-                toast.error("Error:", err);
+                console.log(err)
             }
         };
         setActiveStep(activeStep + 1);
+    }
+
+    const onSuccess = () =>{
+        Swal.fire({
+            title: "Success",
+            text: "You have successfully created a new campaign",
+            icon: 'success',
+            confirmButtonColor: 'green'
+        }as SweetAlertOptions).then(function () {
+            navigate('/campaign');
+        })
+    }
+    const onError = (error: any) =>{
+        console.log(error);
+        Swal.fire({
+            title: "Error",
+            text: error,
+            icon: 'error',
+            confirmButtonColor: '#d33'
+        }as SweetAlertOptions).then(function(){
+            navigate('/campaign')
+        })
     }
 
     const handleBack = () => {
@@ -118,14 +139,11 @@ const CampaignFields = () => {
                     );
                 })}
             </Stepper>
-            {activeStep === steps.length && campaignStatus ? (
+            {activeStep === steps.length && campaignStatus ? ( 
                 <Grid component={Box}>
                     <Typography variant="h3" align="center">
-                        Campaign got Created
+                        {onSuccess()}
                     </Typography>
-                    <Button onClick={goToCampList}>
-                        Go to campaign Listing
-                    </Button>
                 </Grid>
             ) : (
                 <>
